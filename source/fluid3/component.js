@@ -108,7 +108,7 @@ class Component {
 		selection.attr('transform', `translate(${this._attr.x}, ${this._attr.y})`);
 		this._toUpdate = {};
 		_.forEach(this._elements, (element) => {
-			element.update(this._attr);
+			element.updateSubComponent(this._attr);
 			if(element.subcomponent && _.isFunction(element.subcomponent.update)) {
 				element.subcomponent.update(duration, delay);
 			}
@@ -116,11 +116,11 @@ class Component {
 		return this;
 	}
 
-	append(componentFactory, update = () => {}) {
+	append(componentFactory, updateSubComponent = function() {}) {
 		var subcomponent = new componentFactory(this._outerSelection);
 		this._elements.push({
 			subcomponent,
-			update: update.bind(subcomponent)
+			updateSubComponent: updateSubComponent.bind(subcomponent)
 		});
 		return subcomponent;
 	}

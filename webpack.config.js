@@ -2,7 +2,7 @@ module.exports = {
     entry: './source/app.js',
     output: {
         path: './build',
-        filename: 'app.js'
+        filename: 'fluid3.js'
     },
     module: {
         loaders: [
