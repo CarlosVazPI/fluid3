@@ -1,4 +1,4 @@
-var d3 = require('d3');
+let d3 = require('d3');
 
 function Axis(axis) {
 	return class {
@@ -14,9 +14,10 @@ function Axis(axis) {
 		}
 
 		update(duration, delay) {
-			var attr = this._attr,
+			let attr = this._attr,
 				scale = attr.scale.domain(attr.domain).range(attr.range),
 				selection = duration ? this._selection.transition().duration(duration).delay(delay || 0) : this._selection;
+
 			selection.call(axis.scale(scale));
 			return this;
 		}
@@ -47,7 +48,8 @@ class Component {
 
 	// returns the nth subcomponent (what) with class whatClass. If it doesn't exist, it is created.
 	getOrCreateNth(what, index = 0, whatClass) {
-	    var selection = whatClass ? this._innerSelection.selectAll('.' + whatClass) : this._innerSelection.selectAll(what);
+	    let selection = whatClass ? this._innerSelection.selectAll('.' + whatClass) : this._innerSelection.selectAll(what);
+
 	    if(selection.size() <= index) {
 	        return this._innerSelection.append(what).attr('class', whatClass);
 	    }
@@ -56,20 +58,30 @@ class Component {
 
 	// returns the nth subcomponent (what) with class whatClass. If it doesn't exist, returns false.
 	getNth(what, index = 0, whatClass) {
-	    var selection = whatClass ? this._innerSelection.selectAll('.' + whatClass) : this._innerSelection.selectAll(what);
+	    const { selectAll } = this._innerSelection;
+		let selection = whatClass ? selectAll('.' + whatClass) : selectAll(what);
+
 	    if(selection.size() <= index) {
 	        return false;
 	    }
+
 	    return d3.select(selection.nodes()[index]);
 	}
 
 	// applies updatingFunction to a list of attributes if and only if at least one of them has been modified since the last call to .update()
 	updateAttributes(attributeList, updatingFunction) {
-		if(_.reduce(attributeList, (acc, attribute) => { return acc || this._toUpdate[attribute]; })) {
+		const hasToUpdate = attributeList.reduce((acc, attribute) => acc || this._toUpdate[attribute]);
+
+		if(hasToUpdate) {
 			let attributesToUpdate = [];
-			_.forEach(attributeList, (attribute) => { attributesToUpdate.push(this._attr[attribute]); })
+
+			attributeList.forEach((attribute) => {
+				attributesToUpdate.push(this._attr[attribute]);
+			});
+
 			updatingFunction(...attributesToUpdate);
 		}
+
 		return this;
 	}
 
@@ -79,17 +91,10 @@ class Component {
 	attr(attributes, value) {
 		if(attributes === undefined) return this._attr;
 		if(value !== undefined) {
-			let key = attributes;
-			this._attr[key] = this._toUpdate[key] = value;
+			this._attr[attributes] = this._toUpdate[attributes] = value;
 		} else {
-			this._attr = _.extend(
-				this._attr,
-				attributes
-			);
-			this._toUpdate = _.extend(
-				this._toUpdate,
-				attributes
-			);
+			this._attr = _.extend(this._attr, attributes);
+			this._toUpdate = _.extend(this._toUpdate, attributes);
 		}
 		return this;
 	}
@@ -103,11 +108,13 @@ class Component {
 	}
 
 	update(duration, delay) {
-		var selection = this._outerSelection;
+		let selection = this._outerSelection;
+
 		if(duration) selection = selection.transition().duration(duration).delay(delay || 0);
+
 		selection.attr('transform', `translate(${this._attr.x}, ${this._attr.y})`);
 		this._toUpdate = {};
-		_.forEach(this._elements, (element) => {
+		this._elements.forEach((element) => {
 			element.update(this._attr);
 			if(element.subcomponent && _.isFunction(element.subcomponent.update)) {
 				element.subcomponent.update(duration, delay);
@@ -117,7 +124,8 @@ class Component {
 	}
 
 	append(componentFactory, update = () => {}) {
-		var subcomponent = new componentFactory(this._outerSelection);
+		let subcomponent = new componentFactory(this._outerSelection);
+
 		this._elements.push({
 			subcomponent,
 			update: update.bind(subcomponent)

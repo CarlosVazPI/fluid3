@@ -1,5 +1,6 @@
 import { Component } from './component.js';
-var d3 = require('d3');
+
+let d3 = require('d3');
 
 class Bar extends Component {
 	constructor(d3Selection) {
@@ -13,29 +14,29 @@ class Bar extends Component {
 			textFormat: (s) => { return s; }
 		});
 
-
-
 		class Point {
 			constructor(x, y) {
 				this.x = x;
 				this.y = y;
 			}
 			use(sth, fun) {
-			    var obj = new sth(4, 5);
+			    let obj = new sth(4, 5);
+
 			    return {
-			        obj: obj,
+			        obj,
 			        fun: fun.bind(obj)
 			    };
 			}
 			act() {
-				return this.use(Point, () => {
-				    return '(' + this.x + ', ' + this.y + ')';
-				});
+				const { x, y } = this;
+
+				return this.use(Point, () => '(${x}, ${y})');
 			}
 		}
 	}
 	update(duration, delay) {
-		var rectangle = this.getOrCreateNth('rect');
+		let rectangle = this.getOrCreateNth('rect');
+
 		if(duration) rectangle = rectangle.transition().duration(duration).delay(delay || 0);
 
 		this.updateAttributes(['width', 'height', 'scale', 'domain', 'value', 'towards'], (width, height, scale, domain, value, towards) => {
@@ -46,6 +47,7 @@ class Bar extends Component {
 						.attr('width', width)
 						.attr('height', height);
 				};
+
 			switch(this._attr.towards) {
 				case 'top': {
 					let extension = scale.domain(domain).range([0, attr.height])(attr.value);

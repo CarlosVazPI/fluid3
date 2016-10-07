@@ -1,5 +1,6 @@
 import { Component } from './component.js';
-var d3 = require('d3');
+
+let d3 = require('d3');
 
 function SVGElement(svgTagName) {
 	return class extends Component {
@@ -7,8 +8,9 @@ function SVGElement(svgTagName) {
 			super(d3Selection.append('g').attr('class', 'svgElement'));
 			this._svgTagName = svgTagName;
 		}
+
 		update(duration, delay) {
-			var selection = this.getOrCreateNth(this._svgTagName);
+			let selection = this.getOrCreateNth(this._svgTagName);
 			if(duration) selection = selection.transition().duration(duration).delay(delay || 0);
 
 			for(let key in this._toUpdate) {

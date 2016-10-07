@@ -37,3 +37,18 @@ var bar = new Bar(d3.select('svg'))
     .attr({value: 100})
     .update(1000);
 ```
+## Installation
+
+* `npm install -g webpack`
+
+## Running / Development
+
+* `npm start`
+
+## Running Tests
+
+* `npm test`
+
+## Further Reading / Useful Links
+
+* D3: https://d3js.org/

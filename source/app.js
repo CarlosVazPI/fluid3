@@ -1,7 +1,8 @@
 import { Bar } from './fluid3/bar.js';
 import { SVGElement } from './fluid3/svgElement.js';
 import _ from 'lodash';
-var d3 = require('d3');
+
+let d3 = require('d3');
 
 
 window.onload = () => {
@@ -15,7 +16,7 @@ window.onload = () => {
 		axis = bar.appendDomainAxis(0, 0, d3.axisLeft());
 	axis._attr.scale = d3.scaleLog(),
 	axis._attr.domain = [1, 100];
-	.update(1000,1000);
+	//.update(1000,1000);
 	bar
 		.attr({
 			x: 30,
