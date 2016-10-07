@@ -14,10 +14,12 @@ class Bar extends Component {
 			rect: {}
 		});
 	}
-	update(duration, delay) {
+	update(duration = 0, delay = 0) {
 		let selection = this.getOrCreateNth('rect');
 
-		if(duration) selection = selection.transition().duration(duration).delay(delay || 0);
+		if(duration) {
+			selection = selection.transition().duration(duration).delay(delay);
+		}
 
 		this.updateAttributes(['width', 'height', 'scale', 'domain', 'value', 'towards'], (width, height, scale, domain, value, towards) => {
 			let extension,

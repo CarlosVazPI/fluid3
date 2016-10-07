@@ -48,24 +48,22 @@ class Component {
 
 	// returns the nth subcomponent (what) with class whatClass. If it doesn't exist, it is created.
 	getOrCreateNth(what, index = 0, whatClass) {
-	    let selection = whatClass ? this._innerSelection.selectAll('.' + whatClass) : this._innerSelection.selectAll(what);
+	    const { selectAll, append } = this._innerSelection,
+	    	selection = whatClass ? selectAll('.' + whatClass) : selectAll(what);
 
 	    if(selection.size() <= index) {
-	        return this._innerSelection.append(what).attr('class', whatClass);
+	        return append(what).attr('class', whatClass);
 	    }
 	    return d3.select(selection.nodes()[index]);
 	}
 
 	// returns the nth subcomponent (what) with class whatClass. If it doesn't exist, returns false.
 	getNth(what, index = 0, whatClass) {
-	    const { selectAll } = this._innerSelection;
-		let selection = whatClass ? selectAll('.' + whatClass) : selectAll(what);
+	    const { selectAll } = this._innerSelection,
+			selection = whatClass ? selectAll('.' + whatClass) : selectAll(what);
+			result = selection.size() <= index ? false : d3.select(selection.nodes()[index]);
 
-	    if(selection.size() <= index) {
-	        return false;
-	    }
-
-	    return d3.select(selection.nodes()[index]);
+	    return result;
 	}
 
 	// applies updatingFunction to a list of attributes if and only if at least one of them has been modified since the last call to .update()
@@ -89,21 +87,21 @@ class Component {
 	// attr(key, value): set attribute[key] = value; returns this
 	// attr(attrs): extends the object's attributes with attrs; returns this
 	attr(attributes, value) {
-		if(attributes === undefined) return this._attr;
-		if(value !== undefined) {
+		if(attributes === undefined) { 
+			return this._attr;
+		} else if(value !== undefined) {
 			this._attr[attributes] = this._toUpdate[attributes] = value;
 		} else {
-			this._attr = _.extend(this._attr, attributes);
-			this._toUpdate = _.extend(this._toUpdate, attributes);
+			this._attr =  Object.assign(this._attr, attributes);
+			this._toUpdate =  Object.assign(this._toUpdate, attributes);
 		}
+
 		return this;
 	}
 
 	toUpdate(...attributes) {
-		this._toUpdate = _.extend(
-			this._toUpdate,
-			_.zipObject(attributes)
-		);
+		this._toUpdate = Object.assign(this._toUpdate, _.zipObject(attributes));
+		
 		return this;
 	}
 

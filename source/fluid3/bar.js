@@ -37,10 +37,13 @@ class Bar extends Component {
 	update(duration, delay) {
 		let rectangle = this.getOrCreateNth('rect');
 
-		if(duration) rectangle = rectangle.transition().duration(duration).delay(delay || 0);
+		if(duration) {
+			rectangle = rectangle.transition().duration(duration).delay(delay || 0);
+		}
 
 		this.updateAttributes(['width', 'height', 'scale', 'domain', 'value', 'towards'], (width, height, scale, domain, value, towards) => {
-			var attr = this._attr,
+			let extension,
+				attr = this._attr,
 				reshape = (x, y, width, height) => {
 					rectangle = rectangle.attr('x', x)
 						.attr('y', y)
@@ -50,19 +53,19 @@ class Bar extends Component {
 
 			switch(this._attr.towards) {
 				case 'top': {
-					let extension = scale.domain(domain).range([0, attr.height])(attr.value);
+					extension = scale.domain(domain).range([0, attr.height])(attr.value);
 					reshape(0, attr.height - extension, attr.width, extension);
 				} break;
 				case 'right': {
-					let extension = scale.domain(domain).range([0, attr.width])(attr.value);
+					extension = scale.domain(domain).range([0, attr.width])(attr.value);
 					reshape(0, 0, extension, attr.height);
 				} break;
 				case 'bottom': {
-					let extension = scale.domain(domain).range([0, attr.height])(attr.value);
+					extension = scale.domain(domain).range([0, attr.height])(attr.value);
 					reshape(0, 0, attr.width, extension);
 				} break;
 				case 'left': {
-					let extension = scale.domain(domain).range([0, attr.width])(attr.value);
+					extension = scale.domain(domain).range([0, attr.width])(attr.value);
 					reshape(attr.width - extension, 0, extension, attr.height);
 				} break;
 			}
