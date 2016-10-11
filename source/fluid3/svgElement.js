@@ -9,11 +9,14 @@ function SVGElement(svgTagName) {
 			this._svgTagName = svgTagName;
 		}
 
-		update(duration, delay) {
+		update(duration, delay = 0) {
 			let selection = this.getOrCreateNth(this._svgTagName);
-			if(duration) selection = selection.transition().duration(duration).delay(delay || 0);
 
-			for(let key in this._toUpdate) {
+			if (duration) {
+				selection = selection.transition().duration(duration).delay(delay);
+			}
+
+			for (let key in this._toUpdate) {
 				selection = selection.attr(key, this._attr[key]);
 			}
 

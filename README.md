@@ -40,6 +40,11 @@ var bar = new Bar(d3.select('svg'))
 ## Installation
 
 * `npm install -g webpack`
+* `npm install -g jasmine`
+* `npm install -g karma`
+* `npm install -g karma-webpack`
+* `npm install -g jasmine-core`
+* `npm install -g jscs`
 
 ## Running / Development
 
@@ -48,6 +53,7 @@ var bar = new Bar(d3.select('svg'))
 ## Running Tests
 
 * `npm test`
+* `npm run lint`
 
 ## Further Reading / Useful Links
 

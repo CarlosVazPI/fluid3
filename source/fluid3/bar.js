@@ -34,10 +34,11 @@ class Bar extends Component {
 			}
 		}
 	}
+
 	update(duration, delay) {
 		let rectangle = this.getOrCreateNth('rect');
 
-		if(duration) {
+		if (duration) {
 			rectangle = rectangle.transition().duration(duration).delay(delay || 0);
 		}
 
@@ -51,7 +52,7 @@ class Bar extends Component {
 						.attr('height', height);
 				};
 
-			switch(this._attr.towards) {
+			switch (this._attr.towards) {
 				case 'top': {
 					extension = scale.domain(domain).range([0, attr.height])(attr.value);
 					reshape(0, attr.height - extension, attr.width, extension);
@@ -72,7 +73,7 @@ class Bar extends Component {
 		});
 
 		this.updateAttributes(['rect'], (rectAttr) => {
-			for(let key in rectAttr) {
+			for (let key in rectAttr) {
 				rectangle = rectangle.attr(key, rectAttr[key]);
 			}
 		});

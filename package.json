@@ -5,6 +5,7 @@
   "main": "source/app.js",
   "scripts": {
     "test": "karma start",
+    "lint": "jscs source/fluid3",
     "start": "webpack --watch"
   },
   "author": "",

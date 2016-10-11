@@ -1,0 +1,54 @@
+{
+  "additionalRules": [ "lib/jscs-rules/*.js" ],
+  "disallowSpacesInsideArrayBrackets": "all",
+  "disallowMultipleVarDecl": false,
+  "requireSpaceBeforeObjectValues": true,
+  "requireCommaBeforeLineBreak": true,
+  "requireBlocksOnNewline": 1,
+  "disallowKeywordsOnNewLine": ["else"],
+  "disallowSpaceBeforeSemicolon": true,
+  "disallowNewlineBeforeBlockStatements": true,
+  "requireSpacesInConditionalExpression": {
+    "afterTest": true,
+    "beforeConsequent": true,
+    "afterConsequent": true,
+    "beforeAlternate": true
+  },
+  "disallowSpacesInCallExpression": true,
+  "disallowSpacesInsideBrackets": true,
+  "disallowEmptyBlocks": true,
+  "requireSpacesInsideObjectBrackets": "all",
+  "requireCurlyBraces": [
+    "if",
+    "else",
+    "for",
+    "while",
+    "do",
+    "try",
+    "catch"
+  ],
+  "requireLineFeedAtFileEnd": true,
+  "disallowTrailingWhitespace": true,
+  "disallowTrailingComma": true,
+  "requireSpaceBeforeBlockStatements": true,
+  "validateParameterSeparator": ", ",
+  "requireSpaceBeforeKeywords": [
+    "else",
+    "while",
+    "catch"
+  ],
+  "requireSpaceAfterKeywords": [
+    "do",
+    "for",
+    "if",
+    "else",
+    "switch",
+    "case",
+    "try",
+    "while",
+    "with",
+    "return"
+  ],
+  "requireSpaceBetweenArguments": true,
+  "requireLineBreakAfterVariableAssignment": true
+}
