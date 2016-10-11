@@ -25,17 +25,17 @@ function Axis(axis) {
 }
 
 class Component {
-	constructor(d3Selection) {
-		this._attr = {
+  constructor(d3Selection) {
+    this._attr = {
 			x: 0,
 			y: 0,
 			width: 0,
 			height: 0
-		};
-		this._toUpdate = {};
-		this._outerSelection = d3Selection;
-		this._innerSelection = d3Selection.append('g');
-		this._elements = [];
+    };
+			this._toUpdate = {};
+			this._outerSelection = d3Selection;
+			this._innerSelection = d3Selection.append('g');
+			this._elements = [];
 	}
 
 	select(what) {
@@ -51,7 +51,7 @@ class Component {
 	    const { selectAll, append } = this._innerSelection,
 	    	selection = whatClass ? selectAll('.' + whatClass) : selectAll(what);
 
-	    if(selection.size() <= index) {
+	    if (selection.size() <= index) {
 	        return append(what).attr('class', whatClass);
 	    }
 	    return d3.select(selection.nodes()[index]);
@@ -70,7 +70,7 @@ class Component {
 	updateAttributes(attributeList, updatingFunction) {
 		const hasToUpdate = attributeList.reduce((acc, attribute) => acc || this._toUpdate[attribute]);
 
-		if(hasToUpdate) {
+		if (hasToUpdate) {
 			let attributesToUpdate = [];
 
 			attributeList.forEach((attribute) => {
@@ -87,9 +87,9 @@ class Component {
 	// attr(key, value): set attribute[key] = value; returns this
 	// attr(attrs): extends the object's attributes with attrs; returns this
 	attr(attributes, value) {
-		if(attributes === undefined) { 
+		if (attributes === undefined) {
 			return this._attr;
-		} else if(value !== undefined) {
+		} else if (value !== undefined) {
 			this._attr[attributes] = this._toUpdate[attributes] = value;
 		} else {
 			this._attr =  Object.assign(this._attr, attributes);
@@ -101,20 +101,22 @@ class Component {
 
 	toUpdate(...attributes) {
 		this._toUpdate = Object.assign(this._toUpdate, _.zipObject(attributes));
-		
+
 		return this;
 	}
 
 	update(duration, delay) {
 		let selection = this._outerSelection;
 
-		if(duration) selection = selection.transition().duration(duration).delay(delay || 0);
+		if (duration) {
+			selection = selection.transition().duration(duration).delay(delay || 0);
+		}
 
 		selection.attr('transform', `translate(${this._attr.x}, ${this._attr.y})`);
 		this._toUpdate = {};
 		this._elements.forEach((element) => {
 			element.update(this._attr);
-			if(element.subcomponent && _.isFunction(element.subcomponent.update)) {
+			if (element.subcomponent && _.isFunction(element.subcomponent.update)) {
 				element.subcomponent.update(duration, delay);
 			}
 		});

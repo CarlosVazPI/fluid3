@@ -16,7 +16,6 @@ window.onload = () => {
 		axis = bar.appendDomainAxis(0, 0, d3.axisLeft());
 	axis._attr.scale = d3.scaleLog(),
 	axis._attr.domain = [1, 100];
-	//.update(1000,1000);
 	bar
 		.attr({
 			x: 30,
