@@ -1,0 +1,40 @@
+OTHER
+- VectorLib
+- - vectors
+
+Component       .attr(), .update(), x, y
+- path            d
+- Orthogonal      width, height
+- - label           text, splitWords, wrapChar, ellipsis, lineHeight
+- - rect          rCorner
+- - roundRect     rTopLeft, rTopRight, rBottomLeft, rBottomRight
+- Circular        cx, cy, r
+- - coronalSector   rMin, startAngle, endAngle
+- - circSector      startAngle, endAngle
+- - circle
+- - ellipse         rx, ry
+
+- Chart
+- - Orthogonal      width, height, x, y, addDomainAxis(), addDimensionAxis()
+- - - bar             scale, domain, tuple
+- - - barchart        scale, domain, dimension, series, tuples
+- - - stackedbar      scale, domain, series, tuples, relative?
+- - - stackedbarchart scale, domain, dimension, series, tuples, relative?
+- - - linechart       scale, domain, dimension, series, tuples, relative?
+- - - areachart       scale, domain, dimension, series, tuples, relative?
+- - - scatterchart    scaleX, scaleY, domainX, domainY, tuples
+- - - bubblechart     scaleX, scaleY, scaleR, domainX, domainY, tuples
+- - Table           rows, columns, cells
+- - Circular        cx, cy, r
+- - - piechart        scale, domain, dimension, tuples, rMin, startAngle, endAngle,
+- - - spiderchart     scale, domain, dimension, series, tuples
+
+- Axis              x, y, width, height, orientation, tickFormat
+- - domainAxis        scale, domain
+- - dimensionAxis     dimension
+
+DESCRIPTION LANGUAGE
+
+this.describe.forEach('dimension').thereShouldBe(Bar).attrs((d) => {
+	value: tuplesByDimension[d.label];
+})
