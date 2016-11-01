@@ -37,6 +37,14 @@ var bar = new Bar(d3.select('svg'))
     .attr({value: 100})
     .update(1000);
 ```
+
+## Label
+
+### Attributes
+
+* vertical-anchor: `bottom` | `middle` | `top`
+* alignment-baseline: `ideographic` | `alphabetic` | `middle` | `central` | `mathematical` | `hanging`
+
 ## Installation
 
 * `npm install -g webpack`

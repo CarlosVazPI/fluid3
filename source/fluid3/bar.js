@@ -13,26 +13,6 @@ class Bar extends Component {
 			rect: {},
 			textFormat: (s) => { return s; }
 		});
-
-		class Point {
-			constructor(x, y) {
-				this.x = x;
-				this.y = y;
-			}
-			use(sth, fun) {
-			    let obj = new sth(4, 5);
-
-			    return {
-			        obj,
-			        fun: fun.bind(obj)
-			    };
-			}
-			act() {
-				const { x, y } = this;
-
-				return this.use(Point, () => '(${x}, ${y})');
-			}
-		}
 	}
 	update(duration, delay) {
 		let rectangle = this.getOrCreateNth('rect');
