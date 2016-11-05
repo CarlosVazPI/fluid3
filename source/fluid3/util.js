@@ -1,3 +1,5 @@
+let d3 = require('d3');
+
 var Side = {
 	isSide: function (side) {
 		return side === 'top' || side === 'bottom' || side === 'left' || side === 'right';
@@ -9,9 +11,9 @@ var Side = {
 	}
 };
 
-function animate(object, duration, delay) {
+function animate(object, duration, delay, ease) {
 	if (duration || delay) {
-		return object.transition().duration(duration || 0).delay(delay || 0);
+		return object.transition().duration(duration || 0).ease(ease || d3.easePolyInOut).delay(delay || 0);
 	} else {
 		return object;
 	}

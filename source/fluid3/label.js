@@ -134,9 +134,9 @@ class Label extends Component {
 		}
 
 		if(toMiddle) {
-			paragraph.attr('transform', 'translate(0, ' + ((height - paragraphHeight - overflowBBox.y) / 2) + ')');
+			paragraph.attr('transform', 'translate(' + attr.x + ', ' + (attr.y + (height - paragraphHeight - overflowBBox.y) / 2) + ')');
 		} else if(toBottom) {
-			paragraph.attr('transform', 'translate(0, ' + (height - paragraphHeight - overflowBBox.y) + ')');
+			paragraph.attr('transform', 'translate(' + attr.x + ', ' + (attr.y + height - paragraphHeight - overflowBBox.y) + ')');
 		}
 
 		return super.update(duration, delay);

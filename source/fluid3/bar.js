@@ -1,63 +1,107 @@
 import { Component } from './component.js';
+import { Rect } from './shape.js';
+import { animate } from './util.js';
 
 let d3 = require('d3');
+
+function toArgList(list) {
+	if (list.length === 0) {
+		return '';
+	} else if (list.length === 1) {
+		return list[0];
+	} else {
+		return (list[0] ? list[0] + ', ' : '') + toArgList(list.slice(1));
+	}
+}
 
 class Bar extends Component {
 	constructor(d3Selection) {
 		super(d3Selection.append('g').attr('class', 'bar'));
 		this.attr({
+			x: 0,
+			y: 0,
+			width: 100,
+			height: 100,
 			value: 0,
 			scale: d3.scaleLinear(),
 			domain: [0, 100],
 			towards: 'top',
-			rect: {},
+			shape: Rect,
+			shapeAttrs: {},
 			textFormat: (s) => { return s; }
 		});
+		this.shape = undefined;
 	}
-	update(duration, delay) {
-		let rectangle = this.getOrCreateNth('rect');
+	update(duration, delay, ease) {
+		let group = this.selection(),
+			attr = this.attr(),
+			toUpdate = this.toUpdate(),
+			domain = attr.domain,
+			scale = attr.scale,
+			value = attr.value,
+			x = attr.x,
+			y = attr.y,
+			isVertical = this._attr.towards === 'top' || this._attr.towards === 'bottom',
+			range = [0, isVertical ? attr.height : attr.width],
+			length = typeof value === 'function'
+				? (d, i, a) => scale.domain(domain).range(range)(value(d, i, a))
+				: () => scale.domain(domain).range(range)(value);
 
-		if(duration) {
-			rectangle = rectangle.transition().duration(duration).delay(delay || 0);
+		// debugger;
+		if(!this.shape) {
+			this.shape = new attr.shape(group);
 		}
 
-		this.updateAttributes(['width', 'height', 'scale', 'domain', 'value', 'towards'], (width, height, scale, domain, value, towards) => {
-			let extension,
-				attr = this._attr,
-				reshape = (x, y, width, height) => {
-					rectangle = rectangle.attr('x', x)
-						.attr('y', y)
-						.attr('width', width)
-						.attr('height', height);
-				};
+		group = animate(group, duration, delay, ease);
 
-			switch(this._attr.towards) {
-				case 'top': {
-					extension = scale.domain(domain).range([0, attr.height])(attr.value);
-					reshape(0, attr.height - extension, attr.width, extension);
-				} break;
-				case 'right': {
-					extension = scale.domain(domain).range([0, attr.width])(attr.value);
-					reshape(0, 0, extension, attr.height);
-				} break;
-				case 'bottom': {
-					extension = scale.domain(domain).range([0, attr.height])(attr.value);
-					reshape(0, 0, attr.width, extension);
-				} break;
-				case 'left': {
-					extension = scale.domain(domain).range([0, attr.width])(attr.value);
-					reshape(attr.width - extension, 0, extension, attr.height);
-				} break;
-			}
+		group.attr('transform', (d, i, a) => {
+			var xPos = typeof x === 'function' ? x(d, i, a) : x,
+				yPos = typeof y === 'function' ? y(d, i, a) : y;
+				
+			return 'translate(' + xPos + ', ' + yPos + ')';
 		});
 
-		this.updateAttributes(['rect'], (rectAttr) => {
-			for(let key in rectAttr) {
-				rectangle = rectangle.attr(key, rectAttr[key]);
-			}
-		});
+		if('shapeAttrs' in toUpdate && Object.keys(toUpdate.shapeAttrs).length) {
+			this.shape = this.shape.attr(toUpdate.shapeAttrs);
+		}
 
-		return super.update(duration, delay);
+		switch(this._attr.towards) {
+			case 'top': {
+				this.shape.attr({
+					x: 0, 
+					y: (d, i, a) => attr.height - length(d, i, a),
+					width: attr.width,
+					height: (d, i, a) => length(d, i, a)
+				});
+			} break;
+			case 'right': {
+				this.shape.attr({
+					x: 0,
+					y: 0,
+					width: (d, i, a) => length(d, i, a),
+					height: attr.height
+				});
+			} break;
+			case 'bottom': {
+				this.shape.attr({
+					x: 0,
+					y: 0,
+					width: attr.width,
+					height: (d, i, a) => length(d, i, a)
+				});
+			} break;
+			case 'left': {
+				this.shape.attr({
+					x: (d, i, a) => attr.width - length(d, i, a),
+					y: 0,
+					width: (d, i, a) => length(d, i, a),
+					height: attr.height
+				});
+			} break;
+		}
+		this.shape.update(duration, delay, ease);
+
+		return super.update(duration, delay, ease);
 	}
 }
 

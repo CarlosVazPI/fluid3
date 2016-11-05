@@ -3,16 +3,14 @@ OTHER
 - - vectors
 
 Component       .attr(), .update(), x, y
-- path            d
-- Orthogonal      width, height
-- - label           text, splitWords, wrapChar, ellipsis, lineHeight
-- - rect          rCorner
-- - roundRect     rTopLeft, rTopRight, rBottomLeft, rBottomRight
-- Circular        cx, cy, r
-- - coronalSector   rMin, startAngle, endAngle
-- - circSector      startAngle, endAngle
-- - circle
-- - ellipse         rx, ry
+- path          
+- rect          
+- circle          
+- ellipse        
+- g
+- arc
+- roundRect
+- label           text, splitWords, wrapChar, ellipsis, lineHeight
 
 - Chart
 - - Orthogonal      width, height, x, y, addDomainAxis(), addDimensionAxis()
