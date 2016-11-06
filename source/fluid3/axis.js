@@ -3,6 +3,15 @@ import { animate } from './util.js';
 let d3 = require('d3');
 
 class Axis extends Component {
+
+	/**
+	 * Keeps track of
+	 *	- padding		space reserved for the axis inside the chart
+	 *	
+	 * @param	chart 	object of class Chart
+	 * @param	side	where the axis has to be put
+	 * @param	key		what attribute of the chart is the domain of the axis
+	 */
 	constructor(chart, side, key) {
 		super(chart.selection().append('g').attr('class', 'axis'));
 		this.attr({
@@ -16,20 +25,31 @@ class Axis extends Component {
 		this.axis = undefined;
 	}
 
+	/**
+	 * Creates/modifies the axis
+	 *	
+	 * @param	duration	Duration in ms of the transition if it is desired (or undefined).
+	 * @param	delay		Delay in ms of the transition if it is desired (or undefined).
+	 * @param	ease		D3 easing of the transition if it is desired (or undefined).
+	 * @return 				This.
+	 */
 	update(duration, delay, ease) {
 		let attr = this.attr(),
-			chartAttr = attr.chart.attr(),
+			chart = attr.chart,
+			chartAttr = chart.attr(),
+			invertDomain = chartAttr.towards === 'top' || chartAttr.towards === 'left',
 			x = 0,
 			y = 0,
+			translation = 'translate(',
 			toUpdate = this.toUpdate(),
 			side = attr.side,
 			isVertical = side === 'top' || side === 'bottom',
 			domain = chartAttr[attr.key],
 			isDimension = 'label' in domain,
-			width = chartAttr.width,
-			height = chartAttr.height,
+			width = chart.innerWidth(),
+			height = chart.innerHeight(),
 			range = isVertical ? [0, width] : [0, height],
-			scaleDomain = isDimension ? [0, domain.members.length * 2] : domain,
+			scaleDomain = isDimension ? [0, domain.members.length * 2] : invertDomain ? [domain[1], domain[0]] : domain,
 			ticks = isDimension ? domain.members.length * 2 : attr.ticks,
 			tickFormat = isDimension ? (d, i) => {
 				if (i % 2) {
@@ -40,26 +60,24 @@ class Axis extends Component {
 			} : attr.tickFormat, 
 			scale = (isDimension ? d3.scaleLinear() : chartAttr.scale).domain(scaleDomain).range(range),
 			selection = this.selection(),
-			translation = 'translate(',
 			padding = attr.padding;
 
 		switch(side) {
 			case 'top':
-				translation += x + ', ' + (padding + y) + ')';
-			break;
 			case 'left':
-				translation += (padding + x) + ', ' + y + ')';
+				translation += x + ', ' + y + ')';
 			break;
 			case 'right':
-				translation += (x + width - padding) + ', ' + y + ')';
+				translation += (x + width) + ', ' + y + ')';
 			break;
 			case 'bottom':
-				translation += x + ', ' + (height - padding + y) + ')';
+				translation += x + ', ' + (height + y) + ')';
 		}
 
 		this.axis = d3['axis' + side.charAt(0).toUpperCase() + side.slice(1)](scale);
-		selection.call(this.axis.tickFormat(tickFormat).ticks(ticks));
-		animate(selection, duration, delay, ease).attr('transform', translation);
+		animate(selection, duration, delay, ease)
+			.call(this.axis.tickFormat(tickFormat).ticks(ticks))
+			.attr('transform', translation);
 
 		if (isDimension) {
 			selection.selectAll('.tick')
@@ -72,8 +90,6 @@ class Axis extends Component {
 					}
 				});
 		}
-
-		// attr.chart.update(duration, delay, ease);
 
 		return super.update(duration, delay, ease);
 	}

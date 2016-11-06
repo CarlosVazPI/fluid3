@@ -1,11 +1,10 @@
-import { Component } from './component.js';
 import { Chart } from './chart.js';
-import { Bar } from './bar.js';
+import { Trend } from './trend.js';
 import { animate } from './util.js';
 
 let d3 = require('d3');
 
-class Barchart extends Chart {
+class Trendchart extends Chart {
 	constructor(d3Selection) {
 		super(d3Selection.append('g').attr('class', 'barchart'));
 		this.attr({
@@ -13,17 +12,18 @@ class Barchart extends Chart {
 			y: 0,
 			width: 100,
 			height: 100,
-			gap: 6,
-			// secondaryGap: 0,
 			dimension: {},
-			// series: {},
+			series: {members: []},
 			tuples: [],
 			scale: d3.scaleLinear(),
 			domain: [0, 100],
 			towards: 'top',
-			bar: {}
+			trend: {
+				stroke: 'black',
+				fill: 'none'
+			}
 		});
-		this.bar = undefined;
+		this.trend = undefined;
 	}
 
 	update(duration = 0, delay = 0, ease) {
@@ -34,15 +34,13 @@ class Barchart extends Chart {
 			width = this.innerWidth(),
 			height = this.innerHeight(),
 			dimension = attr.dimension,
+			series = attr.series,
 			tuples = attr.tuples,
 			towards = attr.towards,
 			scale = attr.scale,
-			barWidth = width / dimension.members.length,
-			tuplesByDimension = {},
+			valuesBySerie = {},
 			domain = attr.domain,
-			gap = attr.gap,
-			// secondaryGap = attr.secondaryGap,
-			barAttrs = attr.bar;
+			trendAttr = attr.trend;
 
 		group = animate(group, duration, delay, ease);
 
@@ -53,33 +51,42 @@ class Barchart extends Chart {
 			return 'translate(' + xPos + ', ' + yPos + ')';
 		});
 
-		dimension.members.forEach((d) => {
-			tuplesByDimension[d.label] = tuples.filter((t) => t[dimension.label] === d.label)[0];
-		})
+		var noSeries = (!series.members || !series.members.length),
+			seriesMembers = noSeries ? [{ label: undefined }] : series.members;
+
+		seriesMembers.forEach((serie) => {
+			valuesBySerie[serie.label] = dimension.members.map((d) => 
+				tuples.find((tuple) => 
+					tuple[dimension.label] === d.label && (!serie.label || tuple[series.label] === serie.label)).value
+			);
+		});
 
 		var selectedGroups = this.selection().selectAll('g.part')
-				.data(dimension.members.map((d) => d.label))
+				.data(seriesMembers.map((d) => d.label))
 				.enter()
 				.append('g')
-				.attr('class', 'part');
+				.attr('class', 'part'),
+			values = noSeries ? (d) => valuesBySerie[d] : valuesBySerie[undefined];
 
-		if (!this.bar) {
-			this.bar = new Bar(selectedGroups);
+		if (!this.trend) {
+			this.trend = new Trend(selectedGroups)
+				.attr({ values });
 		}
-		this.bar.attr(Object.assign({}, {
-			value: (d) => tuplesByDimension[d].value,
-			scale,
-			towards,
-			height,
-			domain,
-			width : barWidth - gap,
-			y: 0,
-			x: (d, i) => i * barWidth + gap / 2
-		}, barAttrs))
-		.update(duration, delay, ease);
+
+		this.trend.attr({
+				scale,
+				towards,
+				height,
+				domain,
+				width,
+				y: 0,
+				x: 0
+			})
+			.attr({ pathAttr: trendAttr })
+			.update(duration, delay, ease);
 
 		return super.update(duration, delay, ease);
 	}
 }
 
-export { Barchart };
+export { Trendchart };

@@ -4,16 +4,6 @@ import { animate } from './util.js';
 
 let d3 = require('d3');
 
-function toArgList(list) {
-	if (list.length === 0) {
-		return '';
-	} else if (list.length === 1) {
-		return list[0];
-	} else {
-		return (list[0] ? list[0] + ', ' : '') + toArgList(list.slice(1));
-	}
-}
-
 class Bar extends Component {
 	constructor(d3Selection) {
 		super(d3Selection.append('g').attr('class', 'bar'));
@@ -27,11 +17,11 @@ class Bar extends Component {
 			domain: [0, 100],
 			towards: 'top',
 			shape: Rect,
-			shapeAttrs: {},
-			textFormat: (s) => { return s; }
+			shapeAttrs: {}
 		});
 		this.shape = undefined;
 	}
+
 	update(duration, delay, ease) {
 		let group = this.selection(),
 			attr = this.attr(),
@@ -47,7 +37,6 @@ class Bar extends Component {
 				? (d, i, a) => scale.domain(domain).range(range)(value(d, i, a))
 				: () => scale.domain(domain).range(range)(value);
 
-		// debugger;
 		if(!this.shape) {
 			this.shape = new attr.shape(group);
 		}

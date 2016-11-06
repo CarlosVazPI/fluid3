@@ -3,8 +3,34 @@ let d3 = require('d3');
 
 describe('tag', function() {
 	it('Should display an animated rectangle and circle', function() {
-		return;
+		// return;
 		const svg = d3.select('body').append('svg').attr('width', 800).attr('height', 500);
+
+// 		var a = svg.append('g'),
+// 			b = a.selectAll('rect').data([1,2]).enter();
+
+// 		var rect = new Rect(b)
+// 			.attr({
+// 				x: (d, i) => i * 20,
+// 				y: (d, i) => i * 5,
+// 				width: 20,
+// 				height: 20
+// 			})
+// 			.update();
+
+// 		// var circle = svg.selectAll("circle").data(data) // UPDATE
+// 		//     .style("fill", "blue");
+
+// 		// circle.exit().remove(); // EXIT
+
+// 		// circle.enter().append("circle") // ENTER
+// 		//     .style("fill", "green")
+// 		//   .merge(circle) // ENTER + UPDATE
+// 		//     .style("stroke", "black");
+// 		// var c = a.selectAll('rect').data([1,2,3]);
+// // // debugger;
+// 		rect.data([1,2,3]).update();
+
 		// var a = svg.append('rect')
 		// 	.attr('x', 0)
 		// 	.attr('y', 0)
@@ -36,8 +62,9 @@ describe('tag', function() {
 		// 	.attr('height', 10)
 		// 	.attr('fill', 'green')
 		// 	.attr('transform', 'rotate(45), translate(100), translate(100)');
-
-		var rect = new Rect(svg)
+		// return;
+		// debugger;
+		var rect = new Rect(svg.append('g'))
 				.attr({
 					x: 105,
 					y: 5,

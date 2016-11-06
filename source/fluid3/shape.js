@@ -3,12 +3,29 @@ import { animate } from './util.js';
 
 let d3 = require('d3');
 
+/**
+ * Returns a class extending Component to draw a basic SVG shape (rect, circle, ellipse, path).
+ *
+ * @param	tag 	SVG shape on which the returned class should be based on
+ * 
+ * @return 			Class extending Component to draw a basic SVG shape
+ */
 function Tag(tag) {
 	return class extends Component {
+
+		/**
+		 * Creates an SVG element (tag).
+		 */
 		constructor(d3Selection) {
 			super(d3Selection.append(tag));
 		}
 
+		/**
+		 * Assigns the attributes (set with `attr`) to the SVGelement.
+		 * Chainable method.
+		 *
+		 * @return 	this
+		 */
 		update(duration, delay, ease) {
 			let object = this.selection(),
 				toUpdate = this.toUpdate();
@@ -67,6 +84,14 @@ class RoundRect extends Component {
 	}
 }
 
+/**
+ * Tween method to perform transitions of Arc objects.
+ * Ultimately returns a value for the 'd' attribute of a path.
+ * 
+ * @param 	initAttr	Initial attributes of the arc; those at the time of starting the transition.
+ * @param 	endAttr		Final attributes of the arc; those at the time of ending the transition.
+ * @return 				A function used by d3 to get the value for the 'd' attribute of a path.
+ */
 function arcTween(initAttr, endAttr) {
 	var arc = d3.arc(),	
 		startAngle = d3.interpolate(initAttr.startAngle, endAttr.startAngle),
@@ -93,10 +118,13 @@ function arcTween(initAttr, endAttr) {
 class Arc extends Component {
 	// https://github.com/d3/d3-shape/blob/master/README.md#arc
 
+	/**
+	 * Initializes the d3-arc attributes as attributes of `this`.
+	 */
 	constructor(d3Selection) {
 		super(d3Selection.append('path'));
 
-		this.oldAttrs = {
+		this.attr({
 			startAngle: 0,
 			endAngle: 0,
 			innerRadius: 0,
@@ -104,8 +132,7 @@ class Arc extends Component {
 			cornerRadius: 0,
 			padAngle: 0,
 			padRadius: 0
-		};
-		this.attr(Object.assign({}, this.oldAttrs));
+		});
 	}
 
 	update(duration, delay, ease) {

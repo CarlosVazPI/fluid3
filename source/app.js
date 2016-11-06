@@ -65,7 +65,7 @@ window.onload = () => {
 			width: 150
 		})
 		.update(1000);
-	bar.select('rect')
+	bar.selection().select('rect')
 		.attr('fill', 'red');
 };
 

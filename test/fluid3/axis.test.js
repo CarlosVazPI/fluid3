@@ -6,6 +6,7 @@ let d3 = require('d3');
 describe('axis', function() {
 	it('should rock', function() {
 		return;
+		// Needs update: Axis' constructor takes a Chart, a side and a key
 		const svg = d3.select('body').append('svg').attr('width', 800).attr('height', 200);
 		var axisDomain = new Axis(svg)
 				.attr({
